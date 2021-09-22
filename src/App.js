@@ -1,25 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState,useEffect} from "react";
+import moment from 'moment';
+import axios from 'axios';
+import { API_BASE_URL } from './config.js';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  const [greeting, setGreeting] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+
+    setDate(moment().format('DD/MM/YYYY h:mm'));
+
+    //console.log(API_BASE_URL+"/main");
+    axios.get(API_BASE_URL+"/main")
+    .then(res => {
+      console.log(res.data);
+      setIsLoaded(true);
+      setGreeting(res.data);
+  
+    })
+    .catch(error => {
+      setIsLoaded(true);
+      setError(error);
+    }
+
+    )
+    
+}, [])
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <h1>{date} {greeting}</h1>
+
+    );
+  }
 }
 
 export default App;

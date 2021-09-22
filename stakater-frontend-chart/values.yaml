@@ -1,0 +1,8 @@
+deployment:
+  image : "lawrence2021/stakater-frontend"
+  tag : latest
+name : stakater-frontend
+spec :
+  replicas : 2
+env:          
+  REACT_APP_API_BASE_URL: "http://stakater-backend-service"
